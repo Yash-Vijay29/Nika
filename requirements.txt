@@ -1,0 +1,13 @@
+opencv-python
+face_recognition
+mss
+pyautogui
+openai
+elevenlabs
+soundfile
+sounddevice
+apscheduler
+python-dotenv
+requests
+Pillow
+numpy

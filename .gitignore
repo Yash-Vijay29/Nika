@@ -1,0 +1,12 @@
+# env files
+.env
+.env.local
+.env.template
+
+# python cache trash
+__pycache__/
+*.pyc
+
+# virtual environments
+venv/
+.env/
