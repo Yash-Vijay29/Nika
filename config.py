@@ -4,9 +4,9 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # API Keys
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-GOOGLE_CHAT_WEBHOOK = os.getenv("GOOGLE_CHAT_WEBHOOK")
-ELEVENLABS_API_KEY = os.getenv("ELEVENLABS_API_KEY")
+OPENAI_API_KEY = ""
+GOOGLE_CHAT_WEBHOOK = ""
+ELEVENLABS_API_KEY = ""
 
 # Behavior Settings
 CHECK_INTERVAL_SECONDS = 5
@@ -22,13 +22,23 @@ MICROPHONE_MODE = "manual"  # "auto" for threshold-based detection, "manual" for
 SILENCE_THRESHOLD = 0.01  # RMS threshold for voice activity detection (0-1 for sounddevice)
 SILENCE_DURATION = 2.0    # Seconds of silence before processing speech
 
+# TTS Backend Settings
+TTS_BACKEND = "paroli"  # "elevenlabs" or "paroli"
 
-# Voice Settings
-VOICE_ID = "21m00Tcm4TlvDq8ikWAM"  # Rachel - warm, friendly female voice
+# ElevenLabs Voice Settings (used when TTS_BACKEND="elevenlabs")
+VOICE_ID = "lhTvHflPVOqgSWyuWQry"  # Rachel - warm, friendly female voice
 # Popular voice options:
 # - "21m00Tcm4TlvDq8ikWAM" - Rachel (female, warm)
 # - "EXAVITQu4vr4xnSDxMaL" - Bella (female, soft)
 # - "pNInz6obpgDQGcFmaJgB" - Adam (male, deep)
+
+# Paroli TTS Settings (used when TTS_BACKEND="paroli")
+import os
+PAROLI_ENCODER_PATH = os.path.join(os.path.dirname(__file__), "ttsmodel/encoder.onnx")
+PAROLI_DECODER_PATH = os.path.join(os.path.dirname(__file__), "ttsmodel/decoder.onnx")
+PAROLI_CONFIG_PATH = os.path.join(os.path.dirname(__file__), "ttsmodel/en_US-nika+RT-medium.onnx.json")
+PAROLI_USE_GPU = True  # Enable CUDA GPU acceleration
+PAROLI_ESPEAK_DATA_PATH = os.path.join(os.path.dirname(__file__), "paroli/build/espeak-ng-data")  # Optional
 
 # Schedule Settings
 SCHEDULES_FILE = "schedules.json"

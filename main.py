@@ -39,14 +39,41 @@ class LivingAssistant:
         self.memory = Memory()
         
         # Actions
-        if not config.ELEVENLABS_API_KEY:
-            logger.error("ELEVENLABS_API_KEY not set! Please configure .env file")
-            sys.exit(1)
         
-        self.voice = VoiceEngine(
-            api_key=config.ELEVENLABS_API_KEY,
-            voice_id=config.VOICE_ID
-        )
+        # Initialize voice engine based on TTS backend
+        if config.TTS_BACKEND == "elevenlabs":
+            if not config.ELEVENLABS_API_KEY:
+                logger.error("ELEVENLABS_API_KEY not set! Please configure .env file")
+                sys.exit(1)
+            
+            self.voice = VoiceEngine(
+                backend="elevenlabs",
+                api_key=config.ELEVENLABS_API_KEY,
+                voice_id=config.VOICE_ID
+            )
+        elif config.TTS_BACKEND == "paroli":
+            # Validate paroli configuration
+            import os
+            for path, name in [
+                (config.PAROLI_ENCODER_PATH, "PAROLI_ENCODER_PATH"),
+                (config.PAROLI_DECODER_PATH, "PAROLI_DECODER_PATH"),
+                (config.PAROLI_CONFIG_PATH, "PAROLI_CONFIG_PATH")
+            ]:
+                if not os.path.exists(path):
+                    logger.error(f"{name} file not found: {path}")
+                    sys.exit(1)
+            
+            self.voice = VoiceEngine(
+                backend="paroli",
+                encoder_path=config.PAROLI_ENCODER_PATH,
+                decoder_path=config.PAROLI_DECODER_PATH,
+                config_path=config.PAROLI_CONFIG_PATH,
+                use_gpu=config.PAROLI_USE_GPU,
+                espeak_data_path=config.PAROLI_ESPEAK_DATA_PATH if os.path.exists(config.PAROLI_ESPEAK_DATA_PATH) else None
+            )
+        else:
+            logger.error(f"Unknown TTS_BACKEND: {config.TTS_BACKEND}. Use 'elevenlabs' or 'paroli'")
+            sys.exit(1)
         self.chat = GoogleChatMessenger(config.GOOGLE_CHAT_WEBHOOK)
         
         # Senses
