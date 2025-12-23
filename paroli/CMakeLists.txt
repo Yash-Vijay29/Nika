@@ -7,7 +7,7 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 
-set(ORT_ROOT "/home/yash/Documents/Libraries/onnxruntime-linux-x64-gpu-1.22.0" CACHE STRING "Path to ONNX Runtime root directory" FORCE)
+set(ORT_ROOT "/home/yash/Documents/Libraries/onnxruntime-linux-x64-gpu-1.14.0" CACHE STRING "Path to ONNX Runtime root directory" FORCE)
 if (ORT_ROOT STREQUAL "")
     message(FATAL_ERROR "ORT_ROOT must be set")
 endif()
