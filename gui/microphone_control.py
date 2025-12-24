@@ -134,11 +134,7 @@ class MicrophoneGUI:
         if self.ears_worker:
             self.ears_worker.stop_listening()
         
-        # Wait a moment for processing to complete
-        import time
-        time.sleep(1)
-        
-        # Reset button state in main thread
+        # Reset button state immediately (no delay)
         self.root.after(0, self._reset_button)
     
     def _reset_button(self):
@@ -155,6 +151,25 @@ class MicrophoneGUI:
                 foreground='gray'
             )
         logger.debug("Button reset to ready state")
+    
+    def on_transcription_start(self):
+        """Called when transcription starts (from ears worker callback)."""
+        if self.root:
+            self.root.after(0, self._update_transcribing_status)
+    
+    def on_transcription_complete(self):
+        """Called when transcription completes (from ears worker callback)."""
+        # Status already shows "Ready" from _reset_button, no additional action needed
+        logger.debug("Transcription completed")
+    
+    def _update_transcribing_status(self):
+        """Update status to show transcribing (must be called from main thread)."""
+        if self.status_label:
+            self.status_label.config(
+                text="Transcribing...",
+                foreground='orange'
+            )
+        logger.debug("Status updated to transcribing")
     
     def run(self):
         """Run the GUI main loop (blocking)."""

@@ -1,12 +1,14 @@
 import os
+from pathlib import Path
 from dotenv import load_dotenv
 
-load_dotenv()
+# Load .env file from project root
+load_dotenv(dotenv_path=Path(__file__).resolve().parent / '.env')
 
 # API Keys
-OPENAI_API_KEY = ""
-GOOGLE_CHAT_WEBHOOK = ""
-ELEVENLABS_API_KEY = ""
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
+GOOGLE_CHAT_WEBHOOK = os.getenv("GOOGLE_CHAT_WEBHOOK", "")
+ELEVENLABS_API_KEY = os.getenv("ELEVENLABS_API_KEY", "")
 
 # Behavior Settings
 CHECK_INTERVAL_SECONDS = 5
@@ -33,7 +35,6 @@ VOICE_ID = "lhTvHflPVOqgSWyuWQry"  # Rachel - warm, friendly female voice
 # - "pNInz6obpgDQGcFmaJgB" - Adam (male, deep)
 
 # Paroli TTS Settings (used when TTS_BACKEND="paroli")
-import os
 PAROLI_ENCODER_PATH = os.path.join(os.path.dirname(__file__), "ttsmodel/encoder.onnx")
 PAROLI_DECODER_PATH = os.path.join(os.path.dirname(__file__), "ttsmodel/decoder.onnx")
 PAROLI_CONFIG_PATH = os.path.join(os.path.dirname(__file__), "ttsmodel/en_US-nika+RT-medium.onnx.json")

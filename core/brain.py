@@ -201,8 +201,11 @@ Respond in JSON format:
             self.memory.add_interaction("voice", response_text)
             logger.info(f"User: {user_text} | Response: {response_text}")
             
+            return response_text
+            
         except Exception as e:
             logger.error(f"Error handling user speech: {e}")
+            return "Sorry, I encountered an error processing your request."
     
     def _detect_schedule_command(self, text: str) -> Optional[str]:
         """Detect if user is trying to manage schedules."""
@@ -399,13 +402,13 @@ Respond in JSON format:
             
             if schedule_command == "add":
                 self._handle_add_schedule(user_text)
-                return
+                return "Schedule added"
             elif schedule_command == "list":
                 self._handle_list_schedules()
-                return
+                return "Listed schedules"
             elif schedule_command == "remove":
                 self._handle_remove_schedule(user_text)
-                return
+                return "Schedule removed"
             
             # Otherwise, handle as normal conversation
             snapshot = self.state.get_snapshot()
@@ -440,5 +443,8 @@ Respond in JSON format:
             self.memory.add_interaction("voice", response_text)
             logger.info(f"User: {user_text} | Response: {response_text}")
             
+            return response_text
+            
         except Exception as e:
             logger.error(f"Error handling user speech: {e}")
+            return "Sorry, I encountered an error processing your request."

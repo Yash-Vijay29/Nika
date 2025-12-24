@@ -1,0 +1,17 @@
+[Unit]
+Description=Living Assistant - Personal AI Guardian
+After=network.target sound.target graphical-session.target applications.target
+PartOf=graphical-session.target
+
+[Service]
+Type=simple
+Environment=DISPLAY=:0
+Environment=XAUTHORITY=/home/yash/.Xauthority
+Environment=PULSE_SERVER=unix:/run/user/1000/pulse/native
+WorkingDirectory=/home/yash/PycharmProjects/living_assistant
+ExecStart=/usr/bin/python3 /home/yash/PycharmProjects/living_assistant/main.py
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=graphical-session.target default.target

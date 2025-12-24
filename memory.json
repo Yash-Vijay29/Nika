@@ -10,6 +10,181 @@
       "type": "voice",
       "content": "Hey there! Just checking in\u2014hope you're having a good evening! What's on your mind right now?",
       "timestamp": "2025-11-28T18:49:33.755092"
+    },
+    {
+      "type": "voice",
+      "content": "Hey there! Just checking in to see how you're doing. If you need a boost or to chat about next steps, I'm here for you!",
+      "timestamp": "2025-12-23T20:38:37.922120"
+    },
+    {
+      "type": "voice",
+      "content": "Hey there! Just checking in\u2014hope you're having a great night! What are you working on?",
+      "timestamp": "2025-12-23T20:43:04.205932"
+    },
+    {
+      "type": "voice",
+      "content": "Hey there! Just checking in\u2014hope you're taking some time for yourself. What are you up to right now?",
+      "timestamp": "2025-12-23T20:47:15.323490"
+    },
+    {
+      "type": "voice",
+      "content": "Hey there! Just checking in\u2014how's your evening going? Let's make the most of it!",
+      "timestamp": "2025-12-23T20:51:35.675090"
+    },
+    {
+      "type": "voice",
+      "content": "Hey there! Just checking in\u2014how's your evening going? Need a little boost or a reminder of what you've got planned?",
+      "timestamp": "2025-12-23T20:59:02.353722"
+    },
+    {
+      "type": "voice",
+      "content": "Hey there! Just checking in\u2014how's your evening going? Remember to take a moment for yourself, too!",
+      "timestamp": "2025-12-23T21:18:18.570704"
+    },
+    {
+      "type": "user_speech",
+      "content": "woah so you seem to work! thats nice",
+      "timestamp": "2025-12-23T21:18:38.492530"
+    },
+    {
+      "type": "voice",
+      "content": "Thanks! I'm here to help you stay productive and keep those good vibes going. What are you working on right now?",
+      "timestamp": "2025-12-23T21:18:38.492806"
+    },
+    {
+      "type": "user_speech",
+      "content": "hmm thats a bit awkward",
+      "timestamp": "2025-12-23T21:18:55.296166"
+    },
+    {
+      "type": "voice",
+      "content": "Feeling a little off? I'm here for you\u2014want to chat about it?",
+      "timestamp": "2025-12-23T21:18:55.296854"
+    },
+    {
+      "type": "voice",
+      "content": "Hey there! Just checking in\u2014how's your evening going? If you have any goals in mind, I'm here to help you tackle them!",
+      "timestamp": "2025-12-23T21:26:07.779777"
+    },
+    {
+      "type": "voice",
+      "content": "Hey there! Just checking in\u2014hope you're having a great evening! What's on your mind?",
+      "timestamp": "2025-12-23T21:29:33.387436"
+    },
+    {
+      "type": "user_speech",
+      "content": "hello you seem to be working fine now!",
+      "timestamp": "2025-12-23T21:29:43.075226"
+    },
+    {
+      "type": "voice",
+      "content": "Hey there! I\u2019m glad to hear that! How\u2019s your evening going?",
+      "timestamp": "2025-12-23T21:29:43.075787"
+    },
+    {
+      "type": "user_speech",
+      "content": "decent i suppose",
+      "timestamp": "2025-12-23T21:29:52.990616"
+    },
+    {
+      "type": "voice",
+      "content": "Decent is a start! What\u2019s on your mind? \ud83d\ude0a",
+      "timestamp": "2025-12-23T21:29:52.990839"
+    },
+    {
+      "type": "voice",
+      "content": "Hey there! Just checking in\u2014hope you're having a cozy evening! If there's anything on your mind or if you'd like to set a goal, I'm here for you!",
+      "timestamp": "2025-12-23T21:33:09.365627"
+    },
+    {
+      "type": "voice",
+      "content": "Hey there! Just checking in\u2014how's your evening going? Need any help getting back on track with something?",
+      "timestamp": "2025-12-23T21:34:18.361749"
+    },
+    {
+      "type": "user_speech",
+      "content": "hello you seem to be working fine!",
+      "timestamp": "2025-12-23T21:34:19.095225"
+    },
+    {
+      "type": "voice",
+      "content": "Hey there! I\u2019m glad to hear that! How\u2019s your day going so far? \ud83d\ude0a",
+      "timestamp": "2025-12-23T21:34:19.095414"
+    },
+    {
+      "type": "voice",
+      "content": "Hey there! Just checking in to see how you're doing. Ready to tackle the day?",
+      "timestamp": "2025-12-24T09:54:16.405069"
+    },
+    {
+      "type": "user_speech",
+      "content": "woah you seem to be working better now?",
+      "timestamp": "2025-12-24T09:54:26.767487"
+    },
+    {
+      "type": "voice",
+      "content": "Thanks! I\u2019m just here to support you! How\u2019s your focus today?",
+      "timestamp": "2025-12-24T09:54:26.768033"
+    },
+    {
+      "type": "voice",
+      "content": "Hey there! Just checking in\u2014hope you\u2019re having a good morning! What\u2019s on your mind today?",
+      "timestamp": "2025-12-24T09:56:51.779328"
+    },
+    {
+      "type": "voice",
+      "content": "Hey there! Just checking in\u2014hope you're feeling good! What's on your mind today?",
+      "timestamp": "2025-12-24T10:03:50.927459"
+    },
+    {
+      "type": "voice",
+      "content": "Hey there! Just checking in\u2014what\u2019s on your mind? Let\u2019s make the most of this time!",
+      "timestamp": "2025-12-24T10:10:23.850738"
+    },
+    {
+      "type": "user_speech",
+      "content": "hello how you doing there?",
+      "timestamp": "2025-12-24T10:14:54.786304"
+    },
+    {
+      "type": "voice",
+      "content": "Hey there! I\u2019m doing great, thanks for asking. How about you? How\u2019s the productivity going today?",
+      "timestamp": "2025-12-24T10:14:54.786872"
+    },
+    {
+      "type": "user_speech",
+      "content": "yo you seem to work faster?",
+      "timestamp": "2025-12-24T10:18:24.619604"
+    },
+    {
+      "type": "voice",
+      "content": "Hey there! I\u2019m always here to help you get things done faster. What\u2019s on your plate right now?",
+      "timestamp": "2025-12-24T10:18:24.619948"
+    },
+    {
+      "type": "user_speech",
+      "content": "hmm you seem snappier than before",
+      "timestamp": "2025-12-24T10:30:55.887577"
+    },
+    {
+      "type": "voice",
+      "content": "Just trying to keep our productivity vibes up! How's your day going so far?",
+      "timestamp": "2025-12-24T10:30:55.888031"
+    },
+    {
+      "type": "voice",
+      "content": "Hey there! Just checking in\u2014what's on your mind? Let's make the most of this time!",
+      "timestamp": "2025-12-24T10:34:40.931629"
+    },
+    {
+      "type": "user_speech",
+      "content": "yo are you working now?",
+      "timestamp": "2025-12-24T10:34:41.478572"
+    },
+    {
+      "type": "voice",
+      "content": "Hey! Just checking in\u2014how's it going with your work?",
+      "timestamp": "2025-12-24T10:34:41.479108"
     }
   ],
   "user_preferences": {}

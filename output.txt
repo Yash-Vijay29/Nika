@@ -1,0 +1,4 @@
+Found 356 .wav files.
+Successfully read 356 files.
+Total duration: 2140.00 seconds
+Total minutes: 35.67 minutes

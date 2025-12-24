@@ -24,6 +24,7 @@ from actions.chat import GoogleChatMessenger
 from core.schedule_manager import ScheduleManager
 from core.scheduler import Scheduler
 import config
+from PyQt6.QtWidgets import QApplication
 
 logger = setup_logger("Main")
 
@@ -78,7 +79,6 @@ class LivingAssistant:
         
         # Senses
         self.eyes = CameraWorker(
-            state=self.state,
             camera_index=config.CAMERA_INDEX,
             check_interval=config.CHECK_INTERVAL_SECONDS
         )
@@ -110,32 +110,72 @@ class LivingAssistant:
         # Update brain with schedule manager for voice command integration
         self.brain.schedule_manager = self.schedule_manager
         
-        # Ears (microphone) - optional, only if enabled and PyAudio works
+        # Unified Control Panel (combines text and voice mode)
+        self.control_panel = None
+        self.kb_listener = None
         self.ears = None
-        self.mic_gui = None
+        
         if config.ENABLE_SPEECH_TO_TEXT:
             try:
                 from senses.ears import EarsWorker
+                from gui.unified_control_qt import UnifiedControlPanel
+                from senses.keyboard_listener import GlobalKeyMonitor
+                
+                # Initialize unified control panel first
+                self.control_panel = UnifiedControlPanel(
+                    on_text_submit=self._on_text_query,
+                    ears_worker=None,  # Will be set after ears worker is created
+                    microphone_mode=config.MICROPHONE_MODE
+                )
+                
+                # Initialize ears worker (callbacks handled via polling in main loop)
                 self.ears = EarsWorker(
                     api_key=config.OPENAI_API_KEY,
                     on_speech_callback=self._on_user_speech,
                     silence_threshold=config.SILENCE_THRESHOLD,
                     silence_duration=config.SILENCE_DURATION,
-                    mode=config.MICROPHONE_MODE
+                    mode=config.MICROPHONE_MODE,
+                    on_processing_start=self.control_panel.on_transcription_start,
+                    on_processing_complete=self.control_panel.on_transcription_complete
                 )
-                logger.info(f"Ears worker initialized in '{config.MICROPHONE_MODE}' mode")
                 
-                # Initialize GUI for manual mode
-                if config.MICROPHONE_MODE == "manual":
-                    from gui.microphone_control import MicrophoneGUI
-                    self.mic_gui = MicrophoneGUI(self.ears)
-                    logger.info("Microphone GUI initialized for manual mode")
-                    
+                # Now connect ears worker to panel
+                self.control_panel.ears_worker = self.ears
+                
+                # Initialize keyboard listener to toggle the panel
+                self.kb_listener = GlobalKeyMonitor(
+                    on_trigger=self.control_panel.request_toggle
+                )
+                
+                logger.info(f"Unified Control Panel initialized (microphone_mode={config.MICROPHONE_MODE})")
+                
             except Exception as e:
-                logger.warning(f"Could not initialize ears worker (speech-to-text disabled): {e}")
-                logger.warning("Speech-to-text requires sounddevice. Check if your microphone is accessible.")
+                logger.warning(f"Could not initialize control panel: {e}")
+                self.control_panel = None
                 self.ears = None
-                self.mic_gui = None
+                self.kb_listener = None
+        else:
+            # Text mode only (no speech-to-text)
+            try:
+                from gui.unified_control_qt import UnifiedControlPanel
+                from senses.keyboard_listener import GlobalKeyMonitor
+                
+                self.control_panel = UnifiedControlPanel(
+                    on_text_submit=self._on_text_query,
+                    ears_worker=None,
+                    microphone_mode="manual"  # Doesn't matter since no ears worker
+                )
+                
+                self.kb_listener = GlobalKeyMonitor(
+                    on_trigger=self.control_panel.request_toggle
+                )
+                
+                logger.info("Unified Control Panel initialized (text only)")
+                
+            except Exception as e:
+                logger.error(f"Failed to initialize control panel: {e}")
+                self.control_panel = None
+                self.kb_listener = None
 
         
         self.running = False
@@ -170,10 +210,12 @@ class LivingAssistant:
         logger.info("All systems online! 🚀")
         self.voice.speak("Hello! I'm awake and ready to assist you.")
         
-        # Start GUI if in manual mode (must be created in main thread)
-        if self.mic_gui:
-            self.mic_gui.start()
-            logger.info("Microphone GUI window opened")
+        # Start Unified Control Panel (hidden initially) and Keyboard Listener
+        if self.control_panel:
+            self.control_panel.start()
+            logger.info("Unified Control Panel ready")
+        if self.kb_listener:
+            self.kb_listener.start()
         
         # Main loop
         try:
@@ -183,28 +225,64 @@ class LivingAssistant:
             self.stop()
     
     def _main_loop(self):
-        """Main decision loop."""
+        """Main decision loop with Qt event processing."""
+        from PyQt6.QtWidgets import QApplication
+        
+        # Schedule brain analysis separately (slower)
+        self._schedule_brain_analysis()
+        
+        # Fast GUI update loop
         while self.running:
             try:
-                # Process GUI events if in manual mode
-                if self.mic_gui and self.mic_gui.root:
-                    self.mic_gui.root.update()
+                # Process Qt events (needed for signals/slots to work)
+                QApplication.processEvents()
                 
-                # Get current screenshot if available
-                screenshot = self.screen.get_screenshot_base64()
+                # Poll Ears Queue (Multiprocessing IPC)
+                if self.ears:
+                    self.ears.check_queues()
                 
-                # Let the brain decide what to do
-                decision = self.brain.analyze_and_decide(screenshot)
+                # Poll Eyes State (Multiprocessing IPC)
+                # (Optional: If we want to mirror presence in GUI later)
                 
-                # Execute the decision
-                self.brain.execute_decision(decision)
-                
-                # Sleep before next iteration
-                time.sleep(config.CHECK_INTERVAL_SECONDS)
+                # Sleep to avoid CPU spinning
+                time.sleep(0.05)  # 50ms = 20 FPS, plenty for UI
                 
             except Exception as e:
                 logger.error(f"Error in main loop: {e}")
-                time.sleep(config.CHECK_INTERVAL_SECONDS)
+                time.sleep(0.1)
+    
+    def _schedule_brain_analysis(self):
+        """Schedule periodic brain analysis (runs independently of GUI)."""
+        if not self.running:
+            return
+            
+        try:
+            # Check user presence from Eyes (IPC Value)
+            is_present = self.eyes.is_user_present()
+            self.state.update_user_presence(is_present)
+
+            # Get current screenshot if available
+            screenshot = self.screen.get_screenshot_base64()
+            
+            # Let the brain decide what to do
+            decision = self.brain.analyze_and_decide(screenshot)
+            
+            # Execute the decision
+            self.brain.execute_decision(decision)
+            
+        except Exception as e:
+            logger.error(f"Error in brain analysis: {e}")
+        
+        # Schedule next analysis
+        if self.running:
+            # Use threading.Timer for next iteration
+            import threading
+            timer = threading.Timer(
+                config.CHECK_INTERVAL_SECONDS,
+                self._schedule_brain_analysis
+            )
+            timer.daemon = True
+            timer.start()
     
     def stop(self):
         """Stop all components."""
@@ -212,9 +290,13 @@ class LivingAssistant:
         
         self.running = False
         
-        # Stop GUI if running
-        if self.mic_gui:
-            self.mic_gui.stop()
+        # Stop Keyboard Listener
+        if self.kb_listener:
+            self.kb_listener.stop()
+            
+        # Stop Control Panel (handled by the panel itself on hide)
+        if self.control_panel:
+            self.control_panel.request_hide()
         
         # Stop workers
         self.eyes.stop()
@@ -232,9 +314,32 @@ class LivingAssistant:
         logger.info(f"Processing user speech: {text}")
         self.brain.handle_user_speech(text)
 
+    def _on_text_query(self, text: str):
+        """Callback when user submits text via Control Panel."""
+        logger.info(f"Processing text query: {text}")
+        
+        # Reuse the logic for speech handling since it's just text input
+        response = self.brain.handle_user_speech(text)
+        
+        logger.info(f"Got response from brain: {response}")
+        
+        # Display actual response in the Control Panel
+        if self.control_panel and response:
+            logger.info("Sending response to GUI...")
+            self.control_panel.add_response(response)
+        else:
+            logger.warning(f"Not sending to GUI - control_panel={self.control_panel}, response={response}")
+
 
 def main():
     """Entry point."""
+    import multiprocessing
+    # Important: Set start method to 'spawn' for safe GUI/Multiprocessing interaction
+    multiprocessing.set_start_method('spawn', force=True)
+    
+    # Initialize Qt application first (required for Qt widgets)
+    app = QApplication(sys.argv)
+    
     assistant = LivingAssistant()
     assistant.start()
 
